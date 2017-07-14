@@ -1,6 +1,6 @@
 #pragma once
 #include <SFML/Graphics/RenderWindow.hpp>
-#include "Resources/Player.h"
+#include "Player.h"
 
 class Game {
 public:
