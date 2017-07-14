@@ -19,12 +19,20 @@ void Player::Update(){
 	sf::Vector2f playerPos = sprite.getPosition();
 	
 	//HORIZONTAL MOVEMENT
-	int xChange = 0;
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::A) || sf::Keyboard::isKeyPressed(sf::Keyboard::Left))	
-		xChange -= 12;
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::D) || sf::Keyboard::isKeyPressed(sf::Keyboard::Right)) 
-		xChange += 12;
-	playerPos.x += xChange;
+	bool moveLeft = sf::Keyboard::isKeyPressed(sf::Keyboard::A) || sf::Keyboard::isKeyPressed(sf::Keyboard::Left);
+	bool moveRight = sf::Keyboard::isKeyPressed(sf::Keyboard::D) || sf::Keyboard::isKeyPressed(sf::Keyboard::Right);
+	if (moveLeft || moveRight) {
+		int xAcc = 0;
+		if (!moveRight)
+			xAcc -= 12;
+		if (!moveLeft)
+			xAcc += 12;
+		velocity.x = xAcc;
+	} else {
+		velocity.x *= 0.8f;
+	}
+	//Initial movement
+	playerPos.x += velocity.x;
 
 	//Wall collision
 	if (playerPos.x < 0)
@@ -35,20 +43,26 @@ void Player::Update(){
 	//VERTICAL MOVEMENT
 	//Floor collision 
 	bool onGround = false;
+
 	if (playerPos.y + playerBounds.height >= 720) { // HARDCODED SIZE BC I AM A BAD
 		playerPos.y = 720 - playerBounds.height;
 		onGround = true;
 	}
 
 	if (!onGround) { 
-		fallSpeed += fallSpeed < maxSpeed ? gravity : 0;
-		playerPos.y += fallSpeed;
+		//Mid Jump
+		velocity.y += velocity.y < maxSpeed ? gravity : 0;
+		playerPos.y += velocity.y;
 	}
 	else {
 		//Jumping
 		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space)) {
-			fallSpeed = -50;
-			playerPos.y += fallSpeed;
+			velocity.y = -50;
+			playerPos.y += velocity.y;
+		}
+		//Not Jumping
+		else {
+			
 		}
 	}
 	sprite.setPosition(playerPos);

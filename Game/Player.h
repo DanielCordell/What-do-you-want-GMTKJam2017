@@ -9,7 +9,8 @@ private:
 
 	const int gravity = 2;
 	const int maxSpeed = 300;
-	int fallSpeed = 0;
+	sf::Vector2f velocity = {0,0};
+
 public:
 	Player();
 
