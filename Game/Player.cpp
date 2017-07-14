@@ -44,27 +44,29 @@ void Player::Update(){
 	//Floor collision 
 	bool onGround = false;
 
+	//Detect if on ground
 	if (playerPos.y + playerBounds.height >= 720) { // HARDCODED SIZE BC I AM A BAD
-		playerPos.y = 720 - playerBounds.height;
 		onGround = true;
 	}
 
 	if (!onGround) { 
 		//Mid Jump
+		if (!sf::Keyboard::isKeyPressed(sf::Keyboard::Space) && velocity.y <= 0) gravity = 10;
+		else gravity = 2;
 		velocity.y += velocity.y < maxSpeed ? gravity : 0;
-		playerPos.y += velocity.y;
 	}
 	else {
+		playerPos.y = 720 - playerBounds.height;
 		//Jumping
 		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space)) {
 			velocity.y = -50;
-			playerPos.y += velocity.y;
 		}
 		//Not Jumping
 		else {
-			
+			velocity.y = 0;
 		}
 	}
+	playerPos.y += velocity.y;
 	sprite.setPosition(playerPos);
 	std::cout << sprite.getPosition().x << " " << sprite.getPosition().y << std::endl;
 }

@@ -7,9 +7,10 @@ private:
 	sf::Texture playerTex;
 	sf::Sprite sprite;
 
-	const int gravity = 2;
+	int gravity = 2;
 	const int maxSpeed = 300;
 	sf::Vector2f velocity = {0,0};
+	float yAcc = 0;
 
 public:
 	Player();
