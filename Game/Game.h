@@ -1,6 +1,9 @@
 #pragma once
 #include <SFML/Graphics/RenderWindow.hpp>
+#include <memory>
+
 #include "Player.h"
+#include "Node.h"
 
 class Game {
 public:
@@ -10,7 +13,7 @@ private:
 	bool shouldQuit;
 	sf::RenderWindow window;
 	Player player;
-
+	std::shared_ptr<Node> nodes[68];
 public:
 	void Events();
 	void Update();

@@ -51,7 +51,7 @@ void Player::Update(){
 
 	if (!onGround) { 
 		//Mid Jump
-		if (!sf::Keyboard::isKeyPressed(sf::Keyboard::Space) && velocity.y <= 0) gravity = 10;
+		if (!sf::Keyboard::isKeyPressed(sf::Keyboard::Space) && velocity.y <= 0) gravity = 6;
 		else gravity = 2;
 		velocity.y += velocity.y < maxSpeed ? gravity : 0;
 	}
