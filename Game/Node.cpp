@@ -1,13 +1,13 @@
 #include "Node.h"
 
-Node::Node(int left, int center, int right)
+Node::Node(int left, int centre, int right)
 {
 	leftID = left;
 	rightID = right;
-	centerID = center;
+	centreID = centre;
 }
 
-std::shared_ptr<Node> Node::create(int left, int center, int right)
+std::shared_ptr<Node> Node::create(int left, int centre, int right)
 {
-	return std::make_shared<Node>(left, center, right);
+	return std::make_shared<Node>(left, centre, right);
 }

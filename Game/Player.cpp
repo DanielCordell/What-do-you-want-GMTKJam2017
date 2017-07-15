@@ -68,5 +68,4 @@ void Player::Update(){
 	}
 	playerPos.y += velocity.y;
 	sprite.setPosition(playerPos);
-	std::cout << sprite.getPosition().x << " " << sprite.getPosition().y << std::endl;
 }

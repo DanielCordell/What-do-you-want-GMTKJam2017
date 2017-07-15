@@ -14,6 +14,7 @@ private:
 	sf::RenderWindow window;
 	Player player;
 	std::shared_ptr<Node> nodes[68];
+	std::shared_ptr<Node> current;
 public:
 	void Events();
 	void Update();
@@ -22,4 +23,5 @@ public:
 	bool ShouldQuit() const { return shouldQuit; }
 	Player& getPlayer() { return player; }
 	
+	void printTreeDebug() const;
 };

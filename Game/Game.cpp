@@ -275,6 +275,9 @@ Game::Game(): shouldQuit(false), window(sf::VideoMode(1280, 720), "Hello", sf::S
 	nodes[67] = Node::create(3, 4, 5);
 	nodes[67]->answerText = "I want to get better.";
 	nodes[67]->questionText = "Okay, what usually makes you feel good?";
+
+	current = nodes[0];
+	printTreeDebug();
 }
 
 void Game::Events()
@@ -283,6 +286,20 @@ void Game::Events()
 	while (window.pollEvent(event)) {
 		if (event.type == sf::Event::Closed)
 			shouldQuit = true;
+		if (event.type == sf::Event::KeyPressed) {
+			switch (event.key.code) {
+			case sf::Keyboard::A:
+				if (nodes[current->leftID] != nullptr) current = nodes[current->leftID];
+				break;
+			case sf::Keyboard::W:
+				if (nodes[current->centreID] != nullptr) current = nodes[current->centreID];
+				break;
+			case sf::Keyboard::D:
+				if (nodes[current->rightID] != nullptr) current = nodes[current->rightID];
+				break;
+			}
+			printTreeDebug();
+		}
 	}
 }
 
@@ -296,4 +313,13 @@ void Game::Draw()
 	window.clear(sf::Color::White);
 	window.draw(player);
 	window.display();
+}
+
+void Game::printTreeDebug() const 
+{
+	std::cout << std::endl << std::endl;
+	std::cout << current->questionText.toAnsiString() << std::endl;
+	if (current->leftID >= 0) std::cout << "A: " + nodes[current->leftID]->answerText.toAnsiString() << std::endl;
+	if (current->centreID>= 0) std::cout << "W: " + nodes[current->centreID]->answerText.toAnsiString() << std::endl;
+	if (current->rightID >= 0) std::cout << "D: " + nodes[current->rightID]->answerText.toAnsiString() << std::endl;
 }
