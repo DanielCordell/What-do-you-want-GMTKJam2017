@@ -1,5 +1,6 @@
 #pragma once
 #include <memory>
+#include <optional>
 
 #include "Node.h"
 #include "Player.h"
@@ -10,8 +11,13 @@ private:
 	Platform left;
 	Platform centre;
 	Platform right;
+	
+	bool isTransition = false;
 public:
-	void Update(std::shared_ptr<Node> left, std::shared_ptr<Node> centre, std::shared_ptr<Node> right);
+	void Change(std::shared_ptr<Node> left, std::shared_ptr<Node> centre, std::shared_ptr<Node> right);
 	void draw(sf::RenderTarget & target, sf::RenderStates states) const override;
-	Player::Col DetectCollision(Player& player);
+	std::tuple<std::optional<float>, std::optional<float>, std::optional<float>> DetectCollision(Player& player) const;
+	void Update();
+	void Transition();
+	bool TransitionDone() const;
 };

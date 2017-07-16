@@ -3,7 +3,6 @@
 #include <sstream>
 
 #include "Platform.h"
-#include <iostream>
 
 sf::Font Platform::font;
 
@@ -19,6 +18,7 @@ sf::Color Platform::colors[] = {
 
 void Platform::Reset(std::string string, Position pos)
 {
+	transitionSpeed = 0;
 	text.setString("");
 	this->doesExist = true;
 	int randColor = rand() % 8;
@@ -41,7 +41,6 @@ void Platform::Reset(std::string string, Position pos)
 		auto wordWidth = sf::Text(word, font, 20).getGlobalBounds().width;
 		if (currentWidth + wordWidth + spaceWidth >= 200) {
 			text.setString(text.getString().toAnsiString() += "\n" + word + " ");
-			std::cout << currentWidth << std::endl;
 			currentWidth = wordWidth + spaceWidth;
 		}
 		else {
@@ -63,11 +62,25 @@ void Platform::draw(sf::RenderTarget & target, sf::RenderStates states) const
 	target.draw(platform, states);
 }
 
+std::optional<float> Platform::GetCollision(sf::FloatRect player) const {
+	auto bounds = platform.getGlobalBounds();
+	if (player.intersects(sf::FloatRect(bounds.left, bounds.top, bounds.width, 1)))
+ 		return std::make_optional(bounds.top);
+	return {};
+}
+
+void Platform::Transition()
+{
+	transitionSpeed+= 1;
+	platform.move(0, transitionSpeed);
+	text.move(0, transitionSpeed);
+}
+
 Platform::Platform() {
-	font.loadFromFile("Resources/font.ttf");
 	doesExist = false;
-	platform.setOutlineColor(sf::Color::Transparent);
-	platform.setSize({ 200, 10 });
+	platform.setOutlineColor(sf::Color::Black);
+	platform.setSize({ 200, 15 });
+	font.loadFromFile("Resources/font.ttf");
 	text.setFillColor(sf::Color(0, 0, 0));
 	text.setCharacterSize(20);
 	text.setFont(font);

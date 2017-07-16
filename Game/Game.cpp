@@ -278,8 +278,8 @@ Game::Game(): shouldQuit(false), window(sf::VideoMode(1280, 720), "Hello", sf::S
 	nodes[67]->questionText = "Okay, what usually makes you feel good?";
 
 	current = nodes[0];
-	printTreeDebug();
-	platforms.Update(nodes[current->leftID], nodes[current->centreID], nodes[current->rightID]);
+	platforms.Change(nodes[current->leftID], nodes[current->centreID], nodes[current->rightID]);
+	label.Change(current->questionText);
 }
 
 void Game::Events()
@@ -288,35 +288,38 @@ void Game::Events()
 	while (window.pollEvent(event)) {
 		if (event.type == sf::Event::Closed)
 			shouldQuit = true;
-		if (event.type == sf::Event::KeyPressed) {
-			switch (event.key.code) {
-			case sf::Keyboard::A:
-				if (nodes[current->leftID] != nullptr) current = nodes[current->leftID];
-				platforms.Update(nodes[current->leftID], nodes[current->centreID], nodes[current->rightID]);
-				break;
-			case sf::Keyboard::W:
-				if (nodes[current->centreID] != nullptr) current = nodes[current->centreID];
-				platforms.Update(nodes[current->leftID], nodes[current->centreID], nodes[current->rightID]);
-				break;
-			case sf::Keyboard::D:
-				if (nodes[current->rightID] != nullptr) current = nodes[current->rightID];
-				platforms.Update(nodes[current->leftID], nodes[current->centreID], nodes[current->rightID]);
-				break;
-			}
-			printTreeDebug();
-		}
 	}
 }
 
 void Game::Update()
 {
-	player.Update();
+	auto x = platforms.DetectCollision(player);
+	if (player.Update(x)) {
+		platforms.Transition();
+		previousCollision = x;
+	}
+	platforms.Update();
+	if (platforms.TransitionDone())
+	{
+		if (std::get<0>(previousCollision).has_value()) current = nodes[current->leftID];
+		else if (std::get<1>(previousCollision).has_value()) current = nodes[current->centreID];
+		else if (std::get<2>(previousCollision).has_value()) current = nodes[current->rightID];
+		if (current->leftID == -1 && current->centreID == -1 && current->rightID == -1) {
+			shouldQuit = true;
+			return;
+		}
+		platforms.Change(current->leftID != -1 ? nodes[current->leftID] : nullptr
+			, current->centreID != -1 ? nodes[current->centreID] : nullptr
+			, current->rightID != -1 ? nodes[current->rightID] : nullptr);
+		label.Change(current->questionText);
+	}
 }
 
 void Game::Draw()
 {
 	window.clear(sf::Color::White);
 	window.draw(platforms);
+	window.draw(label);
 	window.draw(player);
 	window.display();
 }
