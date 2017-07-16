@@ -2,9 +2,10 @@
 #include "Game.h"
 #include <iostream>
 
+
 Game::Game(): shouldQuit(false), window(sf::VideoMode(1280, 720), "Hello", sf::Style::Close) {
 	nodes[0] = Node::create(1, -1, 2);
-	nodes[0]->answerText = "Okay";
+	nodes[0]->answerText = "Okay.";
 	nodes[0]->questionText = "What do you want?";
 
 	nodes[1] = Node::create(3, 4, 5);
@@ -84,7 +85,7 @@ Game::Game(): shouldQuit(false), window(sf::VideoMode(1280, 720), "Hello", sf::S
 	nodes[19]->questionText = "You're making good progress you know.";
 
 	nodes[20] = Node::create(21, 22, 23);
-	nodes[20]->answerText = "Lately, nothing";
+	nodes[20]->answerText = "Lately, nothing.";
 	nodes[20]->questionText = "Do you want to see them?";
 
 	nodes[21] = Node::create(24, 25, 26);
@@ -109,7 +110,7 @@ Game::Game(): shouldQuit(false), window(sf::VideoMode(1280, 720), "Hello", sf::S
 
 	nodes[26] = Node::create(-1, 29, -1);
 	nodes[26]->answerText = "You think so?";
-	nodes[26]->questionText = "I know so";
+	nodes[26]->questionText = "I know so.";
 
 	nodes[27] = Node::create(53, -1, 59);
 	nodes[27]->answerText = "I'll try";
@@ -216,7 +217,7 @@ Game::Game(): shouldQuit(false), window(sf::VideoMode(1280, 720), "Hello", sf::S
 	nodes[52]->questionText = "You're in therapy, that's a start.";
 
 	nodes[53] = Node::create(-1, 54, -1);
-	nodes[53]->answerText = "I don't feel like I am";
+	nodes[53]->answerText = "I don't feel like I am.";
 	nodes[53]->questionText = "I mean it, you are.";
 
 	nodes[54] = Node::create(55, 56, 57);
@@ -249,7 +250,7 @@ Game::Game(): shouldQuit(false), window(sf::VideoMode(1280, 720), "Hello", sf::S
 
 	nodes[61] = Node::create(-1, 64, -1);
 	nodes[61]->answerText = "Ahahahahahaha.";
-	nodes[61]->questionText = "It's good to see you smile";
+	nodes[61]->questionText = "It's good to see you smile.";
 
 	nodes[62] = Node::create(-1, 64, -1);
 	nodes[62]->answerText = "Hahahaha.";
@@ -260,7 +261,7 @@ Game::Game(): shouldQuit(false), window(sf::VideoMode(1280, 720), "Hello", sf::S
 	nodes[63]->questionText = "But I'm here for you if you ever need anything.";
 
 	nodes[64] = Node::create(0, -1, 65);
-	nodes[64]->answerText = "I appreciate that";
+	nodes[64]->answerText = "I appreciate that.";
 	nodes[64]->questionText = "Let's go back a bit, shall we?";
 
 	nodes[65] = Node::create(-1, 66, -1);
@@ -268,8 +269,8 @@ Game::Game(): shouldQuit(false), window(sf::VideoMode(1280, 720), "Hello", sf::S
 	nodes[65]->questionText = "...... Your Dad was a wonderful man.";
 
 	nodes[66] = Node::create(-1, -1, -1);
-	nodes[66]->answerText = "I know";
-	nodes[66]->questionText = "The End";
+	nodes[66]->answerText = "I know.";
+	nodes[66]->questionText = "The End.";
 
 	// I fucked up
 	nodes[67] = Node::create(3, 4, 5);
@@ -278,6 +279,7 @@ Game::Game(): shouldQuit(false), window(sf::VideoMode(1280, 720), "Hello", sf::S
 
 	current = nodes[0];
 	printTreeDebug();
+	platforms.Update(nodes[current->leftID], nodes[current->centreID], nodes[current->rightID]);
 }
 
 void Game::Events()
@@ -290,12 +292,15 @@ void Game::Events()
 			switch (event.key.code) {
 			case sf::Keyboard::A:
 				if (nodes[current->leftID] != nullptr) current = nodes[current->leftID];
+				platforms.Update(nodes[current->leftID], nodes[current->centreID], nodes[current->rightID]);
 				break;
 			case sf::Keyboard::W:
 				if (nodes[current->centreID] != nullptr) current = nodes[current->centreID];
+				platforms.Update(nodes[current->leftID], nodes[current->centreID], nodes[current->rightID]);
 				break;
 			case sf::Keyboard::D:
 				if (nodes[current->rightID] != nullptr) current = nodes[current->rightID];
+				platforms.Update(nodes[current->leftID], nodes[current->centreID], nodes[current->rightID]);
 				break;
 			}
 			printTreeDebug();
@@ -311,6 +316,7 @@ void Game::Update()
 void Game::Draw()
 {
 	window.clear(sf::Color::White);
+	window.draw(platforms);
 	window.draw(player);
 	window.display();
 }

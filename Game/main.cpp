@@ -3,6 +3,7 @@
 
 int main()
 {
+	srand(time(nullptr));
 	Game game;
 	float frameTime = 1.f / 60.f;
 	sf::Clock clock;

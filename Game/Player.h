@@ -20,4 +20,11 @@ public:
 
 	sf::FloatRect GetGlobalBounds() const { return sprite.getGlobalBounds(); }
 
+	enum Col {
+		noCollision = 0,
+		topCollision = 1 << 0,
+		leftCollision = 1 << 1,
+		bottomCollision = 1 << 2,
+		rightCollision = 1 << 3
+	};
 };
