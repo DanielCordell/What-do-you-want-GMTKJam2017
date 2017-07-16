@@ -6,10 +6,15 @@
 #include "Player.h"
 #include <iostream>
 
-Player::Player(){
+Player::Player(): whichPlatformTouched() {
 	playerTex.loadFromFile("Resources/player.png");
 	sprite.setTexture(playerTex);
-	sprite.setPosition(500, 500);
+	sprite.setPosition(670, 675);
+	jumpBuffer.loadFromFile("Resources/Jump.wav");
+	jumpSound.setBuffer(jumpBuffer);
+
+	landBuffer.loadFromFile("Resources/land.wav");
+	landSound.setBuffer(landBuffer);
 }
 
 void Player::draw(sf::RenderTarget & target, sf::RenderStates states) const{
@@ -45,13 +50,14 @@ bool Player::Update(std::tuple<std::optional<float>, std::optional<float>, std::
 
 	//VERTICAL MOVEMENT
 	//Floor collision 
-	bool onGround = false;
 
 	//Detect if on ground
 	if (playerPos.y + playerBounds.height >= 720) { // HARDCODED SIZE BC I AM A BAD
+		if (!onGround) playSound(landSound);
 		onGround = true;
 		hasTouchedPlatform = false;
 	}
+	else onGround = false;
 	
 	if (!isTouchingPlatform) {
 		if (!onGround) {
@@ -65,6 +71,7 @@ bool Player::Update(std::tuple<std::optional<float>, std::optional<float>, std::
 			playerPos.y = 720 - playerBounds.height;
 			//Jumping
 			if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space)) {
+				playSound(jumpSound);
 				velocity.y = -35;
 			}
 			//Not Jumping
@@ -75,6 +82,7 @@ bool Player::Update(std::tuple<std::optional<float>, std::optional<float>, std::
 	}
 	else if (velocity.y >= 0){
 		if (!hasTouchedPlatform) {
+			playSound(landSound);
 			velocity.y = 1;
 			gravity = 0;
 			platformY = 0;
@@ -88,4 +96,10 @@ bool Player::Update(std::tuple<std::optional<float>, std::optional<float>, std::
 	playerPos.y += velocity.y;
 	sprite.setPosition(playerPos);
 	return isTouchingPlatform && velocity.y >= 0;
+}
+
+void Player::playSound(sf::Sound & sound)
+{
+	sound.setPitch(0.02 * (rand() % 11) + 0.95);
+	sound.play();
 }

@@ -1,5 +1,6 @@
 #pragma once
 #include <SFML/Graphics/RenderWindow.hpp>
+#include <SFML/Audio/Music.hpp>
 #include <memory>
 
 #include "Player.h"
@@ -8,10 +9,8 @@
 #include "Label.h"
 
 class Game {
-public:
-	Game();
-
 private:
+	sf::Music music;
 	bool shouldQuit;
 	sf::RenderWindow window;
 	Player player;
@@ -21,6 +20,7 @@ private:
 	std::tuple<std::optional<float>, std::optional<float>, std::optional<float>> previousCollision;
 	Label label;
 public:
+	Game();
 	void Events();
 	void Update();
 	void Draw();

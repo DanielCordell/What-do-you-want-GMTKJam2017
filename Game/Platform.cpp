@@ -25,7 +25,7 @@ void Platform::Reset(std::string string, Position pos)
 	platform.setFillColor(colors[randColor]);
 
 	sf::Vector2f platPos;
-	platPos.y = rand() % 400 + 100;
+	platPos.y = rand() % 400 + 130;
 	platPos.x = rand() % 226 + 426 * pos;
 	platform.setPosition(platPos);
 

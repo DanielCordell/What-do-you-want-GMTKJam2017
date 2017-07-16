@@ -3,10 +3,14 @@
 #include <iostream>
 
 
-Game::Game(): shouldQuit(false), window(sf::VideoMode(1280, 720), "Hello", sf::Style::Close) {
+Game::Game(): shouldQuit(false), window(sf::VideoMode(1280, 720), "What do you want?", sf::Style::Close) {
+	music.openFromFile("Resources/bittersweet.wav");
+	music.setLoop(true);
+	music.play();
+
 	nodes[0] = Node::create(1, -1, 2);
-	nodes[0]->answerText = "Okay.";
 	nodes[0]->questionText = "What do you want?";
+	nodes[0]->answerText = "Okay.";
 
 	nodes[1] = Node::create(3, 4, 5);
 	nodes[1]->answerText = "To be happy.";
@@ -250,11 +254,11 @@ Game::Game(): shouldQuit(false), window(sf::VideoMode(1280, 720), "Hello", sf::S
 
 	nodes[61] = Node::create(-1, 64, -1);
 	nodes[61]->answerText = "Ahahahahahaha.";
-	nodes[61]->questionText = "It's good to see you smile.";
+	nodes[61]->questionText = "It's good to see you smiling.";
 
 	nodes[62] = Node::create(-1, 64, -1);
 	nodes[62]->answerText = "Hahahaha.";
-	nodes[62]->questionText = "Let's go back a bit, shall we?";
+	nodes[62]->questionText = "It's good to see you smiling.";
 
 	nodes[63] = Node::create(-1, 64, -1);
 	nodes[63]->answerText = "Heh.";
@@ -278,8 +282,9 @@ Game::Game(): shouldQuit(false), window(sf::VideoMode(1280, 720), "Hello", sf::S
 	nodes[67]->questionText = "Okay, what usually makes you feel good?";
 
 	current = nodes[0];
-	platforms.Change(nodes[current->leftID], nodes[current->centreID], nodes[current->rightID]);
-	label.Change(current->questionText);
+	platforms.Change(current->leftID != -1 ? nodes[current->leftID] : nullptr
+		, current->centreID != -1 ? nodes[current->centreID] : nullptr
+		, current->rightID != -1 ? nodes[current->rightID] : nullptr);	label.Change(current->questionText);
 }
 
 void Game::Events()
